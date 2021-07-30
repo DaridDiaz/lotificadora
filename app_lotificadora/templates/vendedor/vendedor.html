@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}vendedor{% endblock  %}
+
+{% block container %}
+<div class="row">
+    <!-- columna formulario -->
+    <div class="col-md-6">
+        <!-- identidad -->
+        <div>
+            <label for="dni">N de Identidad</label>
+            <input type="text" class="form-control" id="dni" placeholder="0000-0000-00000">
+        </div>
+        <!-- nombre y apellido -->
+        <div class="row">
+            <!-- nombre -->
+            <div class="col-md-6">
+                <label for="nombre">Nombre</label>
+                <input type="text" class="form-control" id="nombre" placeholder="Nombre">
+            </div>
+            <!-- apellido -->
+            <div class="col-md-6">
+                <label for="apellido">Apellido</label>
+                <input type="text" class="form-control" id="apellido" placeholder="Apellido">
+            </div>
+        </div>
+        <!-- direccion -->
+        <div>
+            <label for="direccion">Direccion</label>
+            <input type="text" class="form-control" id="direccion" placeholder="1234 Main St">
+        </div>
+        <!-- fecha de nacimiento -->
+        <div>
+            <label for="fecha de nacimiento">Fecha de Nacimiento</label>
+            <input type="text" class="form-control" id="fecha de nacimiento" placeholder="YY/MM/DD">
+        </div>
+        <!-- telefono y correo -->
+        <div class="row">
+            <!-- telefono -->
+            <div class="col-md-6">
+                <label for="correo">Correo electronico</label>
+                <input type="email" class="form-control" id="direccion" placeholder="example@email.com">
+            </div>
+            <!-- telefono -->
+            <div class="col-md-4">
+                <label for="telefono">telefono o movil</label>
+                <input type="text" class="form-control" id="telefono" placeholder="1234-5678">
+            </div>
+            <!-- extra -->
+            <div class="col-md-2">
+                <label for="inputState">State</label>
+                <select id="inputState" class="form-control">
+                    <option selected>Choose...</option>
+                    <option>...</option>
+                </select>
+            </div>
+        </div>
+        <!-- boton registro -->
+        <button type="submit" class="mt-5 btn btn-primary">Registro</button>
+    </div>
+    <!-- columna tabla -->
+    <div class="col-md-6">
+        <table class=" table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">telefono</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock  %}

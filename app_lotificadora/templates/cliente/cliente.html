@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}cliente{% endblock  %}
+
+{% block container %}
+<div class="row">
+    <!-- columna formulario -->
+    <div class="col-md-6">
+        <h3>Cliente</h3>
+        <form action="" method="post" id="frm-cliente">
+            {% csrf_token %}
+            <!-- identidad -->
+            <div>
+                <label for="txt-dni">N de Identidad</label>
+                <input name="txt-dni" type="text" class="form-control" id="txt-dni" placeholder="0000-0000-00000">
+            </div>
+            <!-- nombre y apellido -->
+            <div class="row">
+                <!-- nombre -->
+                <div class="col-md-6">
+                    <label for="txt-nombre">Nombre</label>
+                    <input name="txt-nombre" type="text" class="form-control" id="txt-nombre" placeholder="Nombre">
+                </div>
+                <!-- apellido -->
+                <div class="col-md-6">
+                    <label for="txt-apellido">Apellido</label>
+                    <input name="txt-apellido" type="text" class="form-control" id="txt-apellido" placeholder="Apellido">
+                </div>
+            </div>
+            <!-- direccion -->
+            <div>
+                <label for="txt-direccion">Direccion</label>
+                <input name="txt-direccion" type="text" class="form-control" id="txt-direccion" placeholder="1234 Main St">
+            </div>
+            <!-- fecha de nacimiento -->
+            <div>
+                <label for="txt-fecha">Fecha de Nacimiento</label>
+                <input name="txt-fecha" type="text" class="form-control" id="txt-fecha" placeholder="DD/MM/YY">
+            </div>
+            <!-- telefono y correo -->
+            <div class="row">
+                <!-- telefono -->
+                <div class="col-md-8">
+                    <label for="txt-correo">Correo electronico</label>
+                    <input name="txt-correo" type="email" class="form-control" id="txt-correo" placeholder="example@email.com">
+                </div>
+                <!-- telefono -->
+                <div class="col-md-4">
+                    <label for="txt-telefono">telefono o movil</label>
+                    <input name="txt-telefono" type="text" class="form-control" id="txt-telefono" placeholder="1234-5678">
+                </div>
+            </div>
+            <!-- boton registro -->
+            <button type="submit" class="mt-5 btn btn-primary">Registro</button>
+        </form>
+    </div>
+    <!-- columna tabla -->
+    <div class="col-md-6">
+        <table class=" table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">telefono</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in cliente %}
+                    <tr>
+                        <th>{{ c.nombre }}</th>
+                        <td>{{ c.apellido }}</td>
+                        <td>{{ c.telefono }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock  %}
+
+{% block js %}
+    <script>
+        $(function () {
+            $('#frm-cliente').on('submit',function(e){
+                $.post('', $(this).serialize(), function (response){
+                    notify('success', response.msj);
+                }, 'json');
+            });
+        });
+    </script>
+{% endblock  %}

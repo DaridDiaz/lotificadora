@@ -15,7 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+from app_lotificadora import views
+
 
 urlpatterns = [
+    #path('login/', views.login_view, name='login_view')
     path('admin/', admin.site.urls),
-]
+    path('vendedor/', views.vendedor, name="vendedor"),
+    path('pago/', views.pago, name="pago"),
+    path('cliente/', views.cliente, name="cliente"),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
