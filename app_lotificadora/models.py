@@ -19,14 +19,14 @@ class Cliente(models.Model):
 class Sector(models.Model):
     nombre = models.CharField(max_length=35)
     Cantidad = models.FloatField(default=0)
+    ubicacion = models.CharField(max_length=40, null=True)
     
 class Lote(models.Model):
     nombre = models.CharField(max_length=35)
     sector = models.ForeignKey(Sector,on_delete=models.CASCADE, null=True)
-    ubicacion = models.CharField(max_length=40)
     dimension = models.CharField(max_length=40)
     precio = models.FloatField(default=0)
-    vendido = models.BooleanField()
+    estado = models.BooleanField()
 
 class Vendedor(models.Model):
     dni = models.CharField(max_length=35)

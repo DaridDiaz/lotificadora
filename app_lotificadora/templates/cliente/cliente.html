@@ -2,84 +2,69 @@
 {% block title %}cliente{% endblock  %}
 
 {% block container %}
-<div class="row">
-    <!-- columna formulario -->
-    <div class="col-md-6">
-        <h3>Cliente</h3>
-        <form action="" method="post" id="frm-cliente">
-            {% csrf_token %}
-            <!-- identidad -->
-            <div>
-                <label for="txt-dni">N de Identidad</label>
-                <input name="txt-dni" type="text" class="form-control" id="txt-dni" placeholder="0000-0000-00000">
-            </div>
-            <!-- nombre y apellido -->
-            <div class="row">
-                <!-- nombre -->
-                <div class="col-md-6">
-                    <label for="txt-nombre">Nombre</label>
-                    <input name="txt-nombre" type="text" class="form-control" id="txt-nombre" placeholder="Nombre">
+    <div class="row">
+        <!-- columna formulario -->
+        <div class="col-md-6">
+            <h3>Cliente</h3>
+            <form action="" method="post" id="frm-cliente">
+                {% csrf_token %}
+                <!-- identidad -->
+                <div>
+                    <label for="txt-dni">N de Identidad</label>
+                    <input name="txt-dni" type="text" class="form-control" id="txt-dni" placeholder="0000-0000-00000">
                 </div>
-                <!-- apellido -->
-                <div class="col-md-6">
-                    <label for="txt-apellido">Apellido</label>
-                    <input name="txt-apellido" type="text" class="form-control" id="txt-apellido" placeholder="Apellido">
+                <!-- nombre y apellido -->
+                <div class="row">
+                    <!-- nombre -->
+                    <div class="col-md-6">
+                        <label for="txt-nombre">Nombre</label>
+                        <input name="txt-nombre" type="text" class="form-control" id="txt-nombre" placeholder="Nombre">
+                    </div>
+                    <!-- apellido -->
+                    <div class="col-md-6">
+                        <label for="txt-apellido">Apellido</label>
+                        <input name="txt-apellido" type="text" class="form-control" id="txt-apellido" placeholder="Apellido">
+                    </div>
                 </div>
-            </div>
-            <!-- direccion -->
-            <div>
-                <label for="txt-direccion">Direccion</label>
-                <input name="txt-direccion" type="text" class="form-control" id="txt-direccion" placeholder="1234 Main St">
-            </div>
-            <!-- fecha de nacimiento -->
-            <div>
-                <label for="txt-fecha">Fecha de Nacimiento</label>
-                <input name="txt-fecha" type="text" class="form-control" id="txt-fecha" placeholder="DD/MM/YY">
-            </div>
-            <!-- telefono y correo -->
-            <div class="row">
-                <!-- telefono -->
-                <div class="col-md-8">
-                    <label for="txt-correo">Correo electronico</label>
-                    <input name="txt-correo" type="email" class="form-control" id="txt-correo" placeholder="example@email.com">
+                <!-- direccion -->
+                <div>
+                    <label for="txt-direccion">Direccion</label>
+                    <input name="txt-direccion" type="text" class="form-control" id="txt-direccion" placeholder="1234 Main St">
                 </div>
-                <!-- telefono -->
-                <div class="col-md-4">
-                    <label for="txt-telefono">telefono o movil</label>
-                    <input name="txt-telefono" type="text" class="form-control" id="txt-telefono" placeholder="1234-5678">
+                <!-- fecha de nacimiento -->
+                <div>
+                    <label for="txt-fecha">Fecha de Nacimiento</label>
+                    <input name="txt-fecha" type="text" class="form-control" id="txt-fecha" placeholder="DD/MM/YY">
                 </div>
-            </div>
-            <!-- boton registro -->
-            <a type="submit" class="btn btn-primary" href="{% url 'pago' %}">Registro</a>
-        </form>
+                <!-- telefono y correo -->
+                <div class="row">
+                    <!-- telefono -->
+                    <div class="col-md-8">
+                        <label for="txt-correo">Correo electronico</label>
+                        <input name="txt-correo" type="email" class="form-control" id="txt-correo" placeholder="example@email.com">
+                    </div>
+                    <!-- telefono -->
+                    <div class="col-md-4">
+                        <label for="txt-telefono">telefono o movil</label>
+                        <input name="txt-telefono" type="text" class="form-control" id="txt-telefono" placeholder="1234-5678">
+                    </div>
+                </div>
+                <!-- boton registro -->
+                <button type="submit" class="btn btn-primary">Registro</button>
+                <!-- redireccionar -->
+                <button href="{% url 'cliente' %}" class="btn btn-primary">crear contrato</button>
+            </form>
+        </div>
+        <!-- tabla de clientes -->
+        <div class="col-md-6">
+        </div>
     </div>
-    <!-- contrato -->
-    <div class="col-md-6">
-        <h3>Nuevo Contrato</h3>
-        <!-- seleccion vendedor -->
-            <div>
-                <label for="cbo-vendedor">vendedor</label>
-                <select name="cbo-vendedor" id="cbo-vendedor" class="form-select">
-                    {% for v in Vendedor %}
-                        <option value="{{v.id}}">Vendedor #{{ v.id }} - {{ v.nombre }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div>
-                <label for="cbo-sector">Sector</label>
-                <select name="cbo-sector" id="cbo-sector" class="form-select">
-                    {% for s in sector %}
-                        <option value="{{s.id}}">sector #{{ s.id }} - {{ s.nombre }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-    </div>
-</div>
 {% endblock  %}
 
 {% block js %}
     <script>
-        $(function () {
+        $(function () 
+        {
             $('#frm-cliente').on('submit',function(e){
                 $.post('', $(this).serialize(), function (response){
                     notify('success', response.msj);
