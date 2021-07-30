@@ -23,7 +23,7 @@ from app_lotificadora import views
 urlpatterns = [
     #path('login/', views.login_view, name='login_view')
     path('admin/', admin.site.urls),
-    path('vendedor/', views.vendedor, name="vendedor"),
+    path('contrato/', views.contrato, name="contrato"),
     path('pago/', views.pago, name="pago"),
     path('cliente/', views.cliente, name="cliente"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

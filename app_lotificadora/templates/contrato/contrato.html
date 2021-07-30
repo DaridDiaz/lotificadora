@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Contrato{% endblock  %}
+
+{% block container %}
+    <div class="row">
+        <!-- columna formulario -->
+        <div class="col-md-6">
+            <h3>nuevo contrato</h3>
+            <form action="" method="post" id="frm-contrato">
+                {% csrf_token %}
+                <!-- seleccionar cliente -->
+                <div>
+                    <label for="cbo-cliente">cliente</label>
+                    <select name="cbo-cliente" id="cbo-cliente" class="form-select">
+                        {% for c in cli %}
+                            <option value="{{c.id}}">cliente #{{ c.id }} - {{ c.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!-- seleccionar vendedor -->
+                <div>
+                    <label for="cbo-vendedor">vendedor</label>
+                    <select name="cbo-vendedor" id="cbo-vendedor" class="form-select">
+                        {% for v in ven %}
+                            <option value="{{v.id}}">Vendedor #{{ v.id }} - {{ v.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!-- seleccionar sector -->
+                <div>
+                    <label for="cbo-sector">Sector</label>
+                    <select name="cbo-sector" id="cbo-sector" class="form-select">
+                        {% for s in sector %}
+                            <option value="{{s.id}}">Sector #{{ s.id }} - {{ s.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!-- seleccionar lote -->
+                <div>
+                    <label for="cbo-lote">lote</label>
+                    <select name="cbo-lote" id="cbo-lote" class="form-select">
+                        {% for l in Lote %}
+                            <option value="{{l.id}}">Lote #{{ l.id }} - {{ l.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!-- fecha de nacimiento -->
+                <div>
+                    <label for="txt-cuotas">Cuotas</label>
+                    <input name="txt-cuotas" type="text" class="form-control" id="txt-cuotas" placeholder="">
+                </div>
+                <!-- telefono y correo -->
+                <div>
+                    <label for="txt-precio">Precio</label>
+                    <input name="txt-precio" type="text" class="form-control" id="txt-precio" placeholder="">
+                </div> 
+                <!-- boton registro -->
+                <button type="submit" class="btn btn-primary">Registro</button>
+            </form>
+        </div>
+        <!-- tabla de clientes -->
+        <div class="col-md-6">
+        </div>
+    </div>
+{% endblock  %}
+
+{% block js %}
+    <script>
+        $(function () 
+        {
+            $('#frm-contrato').on('submit',function(e){
+                $.post('', $(this).serialize(), function (response){
+                    notify('success', response.msj);
+                }, 'json');
+            });
+        });
+    </script>
+{% endblock  %}

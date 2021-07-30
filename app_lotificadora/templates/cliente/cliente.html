@@ -34,7 +34,7 @@
                 <!-- fecha de nacimiento -->
                 <div>
                     <label for="txt-fecha">Fecha de Nacimiento</label>
-                    <input name="txt-fecha" type="text" class="form-control" id="txt-fecha" placeholder="DD/MM/YY">
+                    <input name="txt-fecha" type="text" class="form-control" id="txt-fecha" placeholder="YY/MM/DD">
                 </div>
                 <!-- telefono y correo -->
                 <div class="row">
@@ -52,7 +52,7 @@
                 <!-- boton registro -->
                 <button type="submit" class="btn btn-primary">Registro</button>
                 <!-- redireccionar -->
-                <button href="{% url 'cliente' %}" class="btn btn-primary">crear contrato</button>
+                <a href="{% url 'contrato' %}" class="btn btn-primary" class="btn btn-primary">crear contrato</a>
             </form>
         </div>
         <!-- tabla de clientes -->
