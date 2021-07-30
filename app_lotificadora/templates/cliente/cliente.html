@@ -50,30 +50,29 @@
                 </div>
             </div>
             <!-- boton registro -->
-            <button type="submit" class="mt-5 btn btn-primary">Registro</button>
+            <a type="submit" class="btn btn-primary" href="{% url 'pago' %}">Registro</a>
         </form>
     </div>
-    <!-- columna tabla -->
+    <!-- contrato -->
     <div class="col-md-6">
-        <table class=" table">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Apellido</th>
-                    <th scope="col">telefono</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for c in cliente %}
-                    <tr>
-                        <th>{{ c.nombre }}</th>
-                        <td>{{ c.apellido }}</td>
-                        <td>{{ c.telefono }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <h3>Nuevo Contrato</h3>
+        <!-- seleccion vendedor -->
+            <div>
+                <label for="cbo-vendedor">vendedor</label>
+                <select name="cbo-vendedor" id="cbo-vendedor" class="form-select">
+                    {% for v in Vendedor %}
+                        <option value="{{v.id}}">Vendedor #{{ v.id }} - {{ v.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="cbo-sector">Sector</label>
+                <select name="cbo-sector" id="cbo-sector" class="form-select">
+                    {% for s in sector %}
+                        <option value="{{s.id}}">sector #{{ s.id }} - {{ s.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
     </div>
 </div>
 {% endblock  %}

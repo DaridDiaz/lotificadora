@@ -1,6 +1,7 @@
+from django.http.response import Http404, HttpResponse
 from django.shortcuts import render
 from django.http import JsonResponse 
-from .models import Cuenta, Pago, Cliente
+from .models import Cuenta, Pago, Cliente, Contrato, Vendedor, Sector
 
 # Create your views here.
 
@@ -45,10 +46,14 @@ def cliente(request):
             telefono = request.POST.get('txt-telefono'),
             correo = request.POST.get('txt-correo'),
         )
+        
+    return render(request, 'cliente/cliente.html')
 
-    ctx = {}
-
-    return render(request, 'cliente/cliente.html', ctx)
+def cliente_tabla(request):
+    if request.method == 'POST' and request.is_ajax():
+        return HttpResponse ('')
+    else:
+        raise Http404('Not Found')
 
 def vendedor(request):
 

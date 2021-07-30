@@ -7,4 +7,5 @@ admin.site.register(Vendedor)
 admin.site.register(Sector)
 admin.site.register(Lote)
 admin.site.register(Pago)
+admin.site.register(Contrato)
 # Register your models here.

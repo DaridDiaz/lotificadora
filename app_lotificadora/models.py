@@ -12,20 +12,19 @@ class Cliente(models.Model):
     fecha = models.DateField()
     telefono = models.CharField(max_length=35)
     correo = models.EmailField(max_length=40)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f'{self.nombre} {self.apellido}'
 
 class Sector(models.Model):
     nombre = models.CharField(max_length=35)
+    Cantidad = models.FloatField(default=0)
     
 class Lote(models.Model):
     nombre = models.CharField(max_length=35)
     sector = models.ForeignKey(Sector,on_delete=models.CASCADE, null=True)
     ubicacion = models.CharField(max_length=40)
     dimension = models.CharField(max_length=40)
-    cuotas = models.FloatField(default=0)
     precio = models.FloatField(default=0)
     vendido = models.BooleanField()
 
@@ -37,6 +36,7 @@ class Vendedor(models.Model):
     fecha = models.DateField()
     telefono = models.CharField(max_length=35)
     correo = models.EmailField(max_length=40)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f'{self.nombre} {self.apellido}'
@@ -59,3 +59,15 @@ class Pago(models.Model):
     origen = models.ForeignKey(Cuenta, on_delete=models.CASCADE)
     monto = models.FloatField(null=True, blank=True)
     comentario = models.TextField(null=True, blank=True)
+
+class Contrato(models.Model):
+
+    cliente = models.ForeignKey(Cliente,on_delete=models.CASCADE, null=True)
+    vendedor = models.ForeignKey(Vendedor,on_delete=models.CASCADE, null=True)
+    sector = models.ForeignKey(Sector,on_delete=models.CASCADE, null=True)
+    lote = models.ForeignKey(Lote,on_delete=models.CASCADE, null=True)
+    cuotas = models.FloatField(default=0)
+    precio_cuota = models.FloatField(default=0)
+
+    def __str__(self):
+        return f'{self.id} {self.cliente} - {self.cuotas}'
