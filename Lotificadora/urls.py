@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.db.models import indexes
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
@@ -23,7 +24,12 @@ from app_lotificadora import views
 urlpatterns = [
     #path('login/', views.login_view, name='login_view')
     path('admin/', admin.site.urls),
-    path('contrato/', views.contrato, name="contrato"),
-    path('pago/', views.pago, name="pago"),
+    path('', views.index, name="index"),
     path('cliente/', views.cliente, name="cliente"),
+    path('cliente/<int:id>/editar', views.mantenimiento_cliente, name="mantenimiento_cliente"),
+    path('vendedor/', views.vendedor, name="vendedor"),
+    path('contrato/', views.contrato, name="contrato"),
+    path('terreno/', views.terreno, name="terreno"),
+    path('pago/', views.pago, name="pago"),
+    
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

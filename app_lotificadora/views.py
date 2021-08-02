@@ -1,9 +1,13 @@
-from django.http.response import Http404, HttpResponse
-from django.shortcuts import render
-from django.http import JsonResponse 
-from .models import Cuenta, Cliente, Sector, Vendedor, Contrato
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, render
+from django.contrib import messages
+from math import pow 
+from .models import Cliente, Vendedor, Cuenta, Sector, Contrato, Lote
 
 # Create your views here.
+
+def index(request):
+    return HttpResponse('login en proceso')
 
 def pago(request):
     if request.is_ajax() and request.method == 'POST':
@@ -25,44 +29,109 @@ def pago(request):
     cuenta = Cuenta.objects.all()
     return render(request, 'pago/pago.html', {'Cuenta': cuenta})
 
+def vendedor(request):
+
+    if request.is_ajax() and request.method == 'POST':
+        dni = request.POST.get('txt-dni')
+        nombre = request.POST.get('txt-nombre')
+        apellido = request.POST.get('txt-apellido')
+        direccion = request.POST.get('txt-direccion')
+        fecha = request.POST.get('txt-fecha')
+        telefono = request.POST.get('txt-telefono')
+        correo = request.POST.get('txt-correo')
+
+        v = Vendedor(dni=dni,nombre=nombre,apellido=apellido,direccion=direccion,fecha=fecha,telefono=telefono,correo=correo)
+        v.save()
+
+        messages.add_message(request, messages.INFO, f'el vendedor {nombre} {apellido} se ha registrado de forma exitosa')
+    
+    ven = Vendedor.objects.all()
+    ctx = {
+        'vendedor': ven,
+    }
+        
+    return render(request, 'vendedor/vendedor.html', ctx)
 
 def cliente(request):
-    if request.is_ajax() and request.method == 'POST':
+    q = request.GET.get('q')
+    if q:
+        cli = Cliente.objects.filter(nombre__startswith=q).order_by('nombre')
+    else:
+        cli = Cliente.objects.all().order_by('nombre')
+    #POST
+    if request.method == 'POST':
+        dni = request.POST.get('txt-dni')
+        nombre = request.POST.get('txt-nombre')
+        apellido = request.POST.get('txt-apellido')
+        direccion = request.POST.get('txt-direccion')
+        fecha = request.POST.get('txt-fecha')
+        telefono = request.POST.get('txt-telefono')
+        correo = request.POST.get('txt-correo')
 
-        Cliente.objects.create(
-            dni = request.POST.get('txt-dni'),
-            nombre = request.POST.get('txt-nombre'),
-            apellido = request.POST.get('txt-apellido'),
-            direccion = request.POST.get('txt-direccion'),
-            fecha = request.POST.get('txt-fecha'),
-            telefono = request.POST.get('txt-telefono'),
-            correo = request.POST.get('txt-correo'),
-        )
+        Cliente.objects.create(dni=dni,nombre=nombre,apellido=apellido,direccion=direccion,fecha=fecha,telefono=telefono,correo=correo)
+        
+        messages.add_message(request, messages.INFO, f'el cliente {nombre} {apellido} se ha registrado de forma exitosa')
 
-    ctx = {}
+    ctx = {
+        'cliente': cli,
+    }
     return render(request, 'cliente/cliente.html', ctx)
 
-def cliente_tabla(request):
-    if request.method == 'POST' and request.is_ajax():
-        return HttpResponse ('')
-    else:
-        raise Http404('Not Found')
+def mantenimiento_cliente(request, id):
+    
+    c = get_object_or_404(Cliente, pk=id)
+    cli = Cliente.objects.all().order_by('nombre')
+
+    if request.method == 'POST':
+        dni = request.POST.get('txt-dni')
+        nombre = request.POST.get('txt-nombre')
+        apellido = request.POST.get('txt-apellido')
+        direccion = request.POST.get('txt-direccion')
+        fecha = request.POST.get('txt-fecha')
+        telefono = request.POST.get('txt-telefono')
+        correo = request.POST.get('txt-correo')
+
+        c = Cliente.objects.get(pk=id)
+        c.dni = dni
+        c.nombre = nombre
+        c.apellido = apellido
+        c.direccion = direccion
+        c.fecha = fecha
+        c.telefono = telefono
+        c.correo = correo
+        c.save()
+        
+        messages.add_message(request, messages.INFO, f'el cliente {nombre} {apellido} se ha registrado de forma exitosa')
+
+    ctx = {
+            'cliente': cli,
+            'c': c
+        }
+    return render(request, 'cliente/cliente.html', ctx)
 
 def contrato(request):
-    if request.is_ajax() and request.method == 'POST':
-        Contrato.objects.create(
-            cliente = request.POST.get('txt-nombre'),
-            vendedor = request.POST.get('cbo-vendedor'),
-            sector = request.POST.get('cbo-vendedor'),
-            lote = request.POST.get('cbo-vendedor'),
-            cuota = request.POST.get('txt-cuota'),
-            precio_cuota = request.POST.get('txt-Precio'),
-        )
+    cli = Cliente.objects.all()
+    ven = Vendedor.objects.all()
+    sec = Sector.objects.all()
+    lo = Lote.objects.all()
+    
+    if request.method == 'POST':
+        cliente = get_object_or_404(Cliente, pk=request.POST.get('cbo-cliente'))
+        vendedor = get_object_or_404(Vendedor, pk=request.POST.get('cbo-vendedor'))
+        lote = get_object_or_404(Lote, pk=request.POST.get('cbo-lote'))
+        cuotas = request.POST.get('cbo-cuotas')
+        precio = request.POST.get('txt-precio')
 
-    cliente = Cliente.objects.all()
-    vendedor = Vendedor.objects.all()
+        Contrato.objects.create(cliente=cliente,vendedor=vendedor,lote=lote,cuotas=int(cuotas),precio_cuota=float(precio))
+    
+
     ctx = {
-        'ven': vendedor,
-        'cli': cliente
+        'cliente': cli,
+        'vendedor': ven,
+        'sector' : sec,
+        'lote' : lo,
     }
     return render(request, 'contrato/contrato.html', ctx)
+
+def terreno(request):
+    return render(request, 'terreno/terreno.html')

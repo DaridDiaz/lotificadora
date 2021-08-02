@@ -12,17 +12,26 @@
                 <div>
                     <label for="cbo-cliente">cliente</label>
                     <select name="cbo-cliente" id="cbo-cliente" class="form-select">
-                        {% for c in cli %}
-                            <option value="{{c.id}}">cliente #{{ c.id }} - {{ c.nombre }}</option>
-                        {% endfor %}
+                        <option value="">seleccione cliente</option>
+                            {% for c in cliente %}
+                                {% if a and a.cliente.id == c.id %}
+                                    <option value="{{c.id}}" selected>{{c.id}} - {{ c.nombre }} {{ a.apellido }}</option>
+                                {% endif %}
+                                <option value="{{c.id}}">{{c.id}} - {{ c.nombre }} {{ c.apellido }}</option>
+                            {% endfor %}
                     </select>
                 </div>
                 <!-- seleccionar vendedor -->
                 <div>
                     <label for="cbo-vendedor">vendedor</label>
                     <select name="cbo-vendedor" id="cbo-vendedor" class="form-select">
-                        {% for v in ven %}
-                            <option value="{{v.id}}">Vendedor #{{ v.id }} - {{ v.nombre }}</option>
+                        <option value="">seleccione Vendedor</option>
+                        {% for v in vendedor %}
+                            {% if a and a.vendedor.id == v.id %}
+                                <option value="{{v.id}}" selected>{{v.id}} - {{ v.nombre }} {{ v.apellido }}</option>
+                            {% else %}
+                            {% endif %}
+                            <option value="{{v.id}}">{{v.id}} - {{ v.nombre }} {{ v.apellido }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -30,8 +39,9 @@
                 <div>
                     <label for="cbo-sector">Sector</label>
                     <select name="cbo-sector" id="cbo-sector" class="form-select">
+                        <option value="">seleccione sector</option>
                         {% for s in sector %}
-                            <option value="{{s.id}}">Sector #{{ s.id }} - {{ s.nombre }}</option>
+                            <option value="{{s.id}}">{{ s.nombre }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -39,27 +49,53 @@
                 <div>
                     <label for="cbo-lote">lote</label>
                     <select name="cbo-lote" id="cbo-lote" class="form-select">
-                        {% for l in Lote %}
-                            <option value="{{l.id}}">Lote #{{ l.id }} - {{ l.nombre }}</option>
+                        <option value="">seleccione lote</option>
+                        {% for l in lote %}
+                            {% if a and a.vendedor.id == l.id %}
+                                <option value="{{l.id}}" selected>{{ l.nombre }}</option>
+                            {% else %}
+                            {% endif %}
+                            <option value="{{l.id}}">{{ l.nombre }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <!-- fecha de nacimiento -->
+                <!-- seleccionar cuotas -->
                 <div>
-                    <label for="txt-cuotas">Cuotas</label>
-                    <input name="txt-cuotas" type="text" class="form-control" id="txt-cuotas" placeholder="">
+                    <label for="cbo-cuotas">Cuotas</label>
+                    <select name="cbo-cuotas" class="form-select" id="cbo-cuotas">
+                        <option value="">seleccione cuota</option>
+                        <option value="12">12</option>
+                        <option value="24">24</option>
+                        <option value="32">32</option>
+                        <option value="64">64</option>
+                    </select>
                 </div>
-                <!-- telefono y correo -->
+                <!-- calculo de cuotas -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="txt-precio">Precio de Cuotas</label>
+                        <input name="txt-precio" type="text" class="form-control" id="txt-precio" placeholder="">
+                    </div>
+                    <div class="col-md-6 mt-4">
+                        <a type=button class="btn btn-primary">Calcular cuota</a>
+                    </div>
+                </div>
                 <div>
-                    <label for="txt-precio">Precio</label>
-                    <input name="txt-precio" type="text" class="form-control" id="txt-precio" placeholder="">
-                </div> 
-                <!-- boton registro -->
-                <button type="submit" class="btn btn-primary">Registro</button>
+                    <!-- boton registro -->
+                    <input type="submit" class="btn btn-primary">Registro</button>
+                </div>
             </form>
         </div>
         <!-- tabla de clientes -->
         <div class="col-md-6">
+            <table>
+                <thead>
+                    <th>Clientes</th>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock  %}

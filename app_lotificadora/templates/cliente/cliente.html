@@ -2,74 +2,141 @@
 {% block title %}cliente{% endblock  %}
 
 {% block container %}
+    <!-- registro de Cliente -->
     <div class="row">
         <!-- columna formulario -->
-        <div class="col-md-6">
-            <h3>Cliente</h3>
-            <form action="" method="post" id="frm-cliente">
+        <div class="col-md-4">
+            <h3>CLIENTE</h3>
+            {% if c %}
+            <form action="{% url 'mantenimiento_cliente' c.id %}" method="post" id="#frm-cliente">
+            {% else %}
+            <form action="" method="post" id="#frm-cliente">
+            {% endif %}    
+            
                 {% csrf_token %}
                 <!-- identidad -->
                 <div>
                     <label for="txt-dni">N de Identidad</label>
-                    <input name="txt-dni" type="text" class="form-control" id="txt-dni" placeholder="0000-0000-00000">
+                    <input name="txt-dni" type="text" value="{{ c.dni }}" class="form-control" id="txt-dni" placeholder="0000-0000-00000" required autofocus>
                 </div>
                 <!-- nombre y apellido -->
                 <div class="row">
                     <!-- nombre -->
                     <div class="col-md-6">
                         <label for="txt-nombre">Nombre</label>
-                        <input name="txt-nombre" type="text" class="form-control" id="txt-nombre" placeholder="Nombre">
+                        <input name="txt-nombre" type="text" value="{{ c.nombre }}" class="form-control" id="txt-nombre" placeholder="Nombre" required autofocus>
                     </div>
                     <!-- apellido -->
                     <div class="col-md-6">
                         <label for="txt-apellido">Apellido</label>
-                        <input name="txt-apellido" type="text" class="form-control" id="txt-apellido" placeholder="Apellido">
+                        <input name="txt-apellido" type="text" value="{{ c.apellido }}" class="form-control" id="txt-apellido" placeholder="Apellido" required autofocus>
                     </div>
                 </div>
                 <!-- direccion -->
                 <div>
                     <label for="txt-direccion">Direccion</label>
-                    <input name="txt-direccion" type="text" class="form-control" id="txt-direccion" placeholder="1234 Main St">
+                    <input name="txt-direccion" type="text" value="{{ c.direccion }}" class="form-control" id="txt-direccion" placeholder="1234 Main St" required autofocus>
                 </div>
                 <!-- fecha de nacimiento -->
                 <div>
-                    <label for="txt-fecha">Fecha de Nacimiento</label>
-                    <input name="txt-fecha" type="text" class="form-control" id="txt-fecha" placeholder="YY/MM/DD">
+                    <label for="txt-correo">Correo electronico</label>
+                    <input name="txt-correo" type="email" value="{{ c.correo }}" class="form-control" id="txt-correo" placeholder="example@email.com">
+                    
                 </div>
                 <!-- telefono y correo -->
                 <div class="row">
-                    <!-- telefono -->
-                    <div class="col-md-8">
-                        <label for="txt-correo">Correo electronico</label>
-                        <input name="txt-correo" type="email" class="form-control" id="txt-correo" placeholder="example@email.com">
+                    <!-- correo -->
+                    <div class="col-md-6">
+                        <label for="txt-fecha">Fecha de Nacimiento</label>
+                        <input name="txt-fecha" type="date" value="{{ c.fecha }}" class="form-control" id="txt-fecha" required autofocus>
                     </div>
                     <!-- telefono -->
-                    <div class="col-md-4">
-                        <label for="txt-telefono">telefono o movil</label>
-                        <input name="txt-telefono" type="text" class="form-control" id="txt-telefono" placeholder="1234-5678">
+                    <div class="col-md-6">
+                        <label for="txt-telefono">telefono</label>
+                        <input name="txt-telefono" type="text" value="{{ c.telefono }}" class="form-control" id="txt-telefono" placeholder="1234-5678" required autofocus>
                     </div>
                 </div>
-                <!-- boton registro -->
-                <button type="submit" class="btn btn-primary">Registro</button>
-                <!-- redireccionar -->
-                <a href="{% url 'contrato' %}" class="btn btn-primary" class="btn btn-primary">crear contrato</a>
+                <!-- botones -->
+                <div class="mt-4">
+                    <!-- boton registro -->
+                    {% if c %}
+                    <input type="submit" class="btn btn-success" value="actualizar Cliente">
+                    {% else %}
+                    <input type="submit" class="btn btn-success" value="Registrar Cliente">
+                    {% endif %}
+                    <!-- redireccionar contrato -->
+                    <a href="{% url 'contrato' %}"class="btn btn-primary">crear contrato</a>
+                </div>
             </form>
         </div>
         <!-- tabla de clientes -->
-        <div class="col-md-6">
+        <div class="col-md-8">
+            <!-- mensaje de alerta -->
+            {% if messages %}
+                <div class="alert alert-success mb-2">
+                {% for message in messages %}
+                    {{ message|safe }}
+                {% endfor %}
+                </div>
+            {% endif %}
+
+            <form action="" method="get">
+                <input type="search" name="q" value="{{ q }}" class="form-control" placeholder="Buscar Cliente">
+            </form>
+
+            <h2>Listado de clientes: {{ cliente|length }}</h2>
+            <!-- tabla de clientes -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="text-center">
+                            <th>dni</th>
+                            <th>nombre</th>
+                            <th>apellido</th>
+                            <th>telefono</th>
+                            <th>correo</th>
+                            <th>acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in cliente %}
+                            <tr class="text-center">
+                                <td>{{ c.dni }}</td>
+                                <td>{{ c.nombre }}</td>
+                                <td>{{ c.apellido }}</td>
+                                <td>{{ c.telefono }}</td>
+                                <td>{{ c.correo|default_if_none:'-' }}</td>
+                                <td>
+                                    <a href="{% url 'mantenimiento_cliente' c.id %}" type="submit" class="btn btn-success">editar</a>
+                                    <input type="submit" class="btn btn-success" value="eliminar">
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <div class="alert alert-danger">No se encuentran Clientes</div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 {% endblock  %}
 
 {% block js %}
-    <script>
-        $(function () 
-        {
-            $('#frm-cliente').on('submit',function(e){
-                $.post('', $(this).serialize(), function (response){
-                    notify('success', response.msj);
-                }, 'json');
-            });
+<script>
+    $(function () {
+        $('#frm-cliente').on('submit', function (e) {
+            e.preventDefault();
+            var me = $(this);
+            $.post('', $(this).serialize(), function (response) {
+                notify(response.color, response.msj);
+            }, 'json');
         });
-    </script>
+
+        setTimeout(() => {
+            $('.alert').slideUp(function () {
+                $(this).remove();
+            });
+        }, 3000)
+    });
+</script>
 {% endblock  %}
