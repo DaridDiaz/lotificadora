@@ -2,11 +2,12 @@
 {% block title %}Contrato{% endblock  %}
 
 {% block container %}
+    <!-- registro Nuevo contrato -->
     <div class="row">
         <!-- columna formulario -->
         <div class="col-md-6">
-            <h3>nuevo contrato</h3>
-            <form action="" method="post" id="frm-contrato">
+            <h3>NUEVO CONTRATO</h3>
+            <form action="" method="post" id="#frm-contrato">
                 {% csrf_token %}
                 <!-- seleccionar cliente -->
                 <div>
@@ -29,7 +30,6 @@
                         {% for v in vendedor %}
                             {% if a and a.vendedor.id == v.id %}
                                 <option value="{{v.id}}" selected>{{v.id}} - {{ v.nombre }} {{ v.apellido }}</option>
-                            {% else %}
                             {% endif %}
                             <option value="{{v.id}}">{{v.id}} - {{ v.nombre }} {{ v.apellido }}</option>
                         {% endfor %}
@@ -41,7 +41,7 @@
                     <select name="cbo-sector" id="cbo-sector" class="form-select">
                         <option value="">seleccione sector</option>
                         {% for s in sector %}
-                            <option value="{{s.id}}">{{ s.nombre }}</option>
+                            <option value="{{s.nombre}}">{{ s.nombre }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -53,7 +53,6 @@
                         {% for l in lote %}
                             {% if a and a.vendedor.id == l.id %}
                                 <option value="{{l.id}}" selected>{{ l.nombre }}</option>
-                            {% else %}
                             {% endif %}
                             <option value="{{l.id}}">{{ l.nombre }}</option>
                         {% endfor %}
@@ -77,23 +76,31 @@
                         <input name="txt-precio" type="text" class="form-control" id="txt-precio" placeholder="">
                     </div>
                     <div class="col-md-6 mt-4">
-                        <a type=button class="btn btn-primary">Calcular cuota</a>
+                        <input type="submit" class="btn btn-success" value="calcular">
                     </div>
                 </div>
+                <!-- boton registro -->
                 <div>
-                    <!-- boton registro -->
-                    <input type="submit" class="btn btn-primary">Registro</button>
+                    <input type="submit" class="btn btn-success" value="Registrar Nuevo Contrato">
                 </div>
             </form>
         </div>
         <!-- tabla de clientes -->
         <div class="col-md-6">
+            <!-- mensaje de alerta -->
+            {% if messages %}
+                <div class="alert alert-success mb-2">
+                {% for message in messages %}
+                    {{ message|safe }}
+                {% endfor %}
+                </div>
+            {% endif %}
+
             <table>
                 <thead>
-                    <th>Clientes</th>
+                    <th>contratos</th>
                 </thead>
                 <tbody>
-
                 </tbody>
             </table>
         </div>
@@ -101,14 +108,21 @@
 {% endblock  %}
 
 {% block js %}
-    <script>
-        $(function () 
-        {
-            $('#frm-contrato').on('submit',function(e){
-                $.post('', $(this).serialize(), function (response){
-                    notify('success', response.msj);
-                }, 'json');
-            });
+<script>
+    $(function () {
+        $('#frm-contrato').on('submit', function (e) {
+            e.preventDefault();
+            var me = $(this);
+            $.post('', $(this).serialize(), function (response) {
+                notify(response.color, response.msj);
+            }, 'json');
         });
-    </script>
+
+        setTimeout(() => {
+            $('.alert').slideUp(function () {
+                $(this).remove();
+            });
+        }, 3000)
+    });
+</script>
 {% endblock  %}

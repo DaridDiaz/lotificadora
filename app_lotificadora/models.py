@@ -77,6 +77,5 @@ class Contrato(models.Model):
     cuotas = models.IntegerField(default=0)
     precio_cuota = models.FloatField(default=0)
     
-
     def __str__(self):
         return f'{self.id} {self.cliente} - Cuotas: {self.cuotas}'

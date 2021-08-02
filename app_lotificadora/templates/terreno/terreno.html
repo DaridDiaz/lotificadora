@@ -1,10 +1,113 @@
 {% extends "base.html" %}
-{% block title %}vendedor{% endblock  %}
+{% block title %}Terrenos{% endblock  %}
 
 {% block container %}
-    <div class="clo-md-6">
-        <div class="col-md-6">icbdjkcjksdb</div>
-        <div class="col-md-6">duhcidhcikusdhu</div>
+    <div class="row">
+        <!-- registro de sector y lote -->
+        <div class="col-md-4">
+            <div class="col">
+                <!-- registro de sector -->
+                <div class="col-md-12">
+                    <h2>SECTOR</h2>
+                    <div>
+                        <label for="txt-nombre">Nombre Sector</label>
+                        <input type="text" class="form-control" id="txt-nombre" name="txt-nombre">
+                    </div>
+                    <div>
+                        <label for="txt-cantidad">cantidad de lotes</label>
+                        <input type="text" class="form-control" id="txt-cantidad" name="txt-cantidad">
+                    </div>
+                    <div>
+                        <label for="txt-ubicacion">ubicacion del sector</label>
+                        <input type="text" class="form-control" id="txt-ubicacion" name="txt-ubicacion">
+                    </div>
+                </div>
+                <!-- registro de lote -->
+                <div class="col-md-12 mt-4">
+                    <h2>LOTE</h2>
+                    <div>
+                        <label for="txt-nombre">Nombre nombre</label>
+                        <input type="text" class="form-control" id="txt-nombre" name="txt-nombre">
+                    </div>
+                    <div>
+                        <label for="cbo-sector">Sector</label>
+                        <input type="text" class="form-control" id="cbo-sector" name="cbo-sector">
+                    </div>
+                    <div>
+                        <label for="txt-ubicacion">ubicacion del sector</label>
+                        <input type="text" class="form-control" id="txt-ubicacion" name="txt-ubicacion">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- tabla de sectores y lotes -->
+        <div class="col-md-7">
+            <!-- mensaje de alerta -->
+            {% if messages %}
+                <div class="alert alert-success mb-2">
+                {% for message in messages %}
+                    {{ message|safe }}
+                {% endfor %}
+                </div>
+            {% endif %}
+
+            <form action="" method="get">
+                <input type="search" name="q" value="{{ q }}" class="form-control" placeholder="Buscar Lote">
+            </form>
+
+            <h2>Listado de lotes: {{ lote|length }}</h2>
+            <!-- tabla de lotes -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="text-center">
+                            <th>sector</th>
+                            <th>lote</th>
+                            <th>dimension</th>
+                            <th>precio</th>
+                            <th>estado</th>
+                            <th>acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for l in lote %}
+                            <tr class="text-center">
+                                <td>{{ l.sector }}</td>
+                                <td>{{ l.lote }}</td>
+                                <td>{{ l.dimension }}</td>
+                                <td>{{ l.precio }}</td>
+                                <td>{{ l.estado }}</td>
+                                <td>
+                                    <a href="{% url 'mantenimiento_cliente' c.id %}" type="submit" class="btn btn-success">editar</a>
+                                    <input type="submit" class="btn btn-success" value="eliminar">
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <div class="alert alert-danger">No se encuentran Clientes</div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <div class="clo-md-6"></div>
+{% endblock  %}
+
+{% block js %}
+<script>
+    $(function () {
+        $('#frm-cliente').on('submit', function (e) {
+            e.preventDefault();
+            var me = $(this);
+            $.post('', $(this).serialize(), function (response) {
+                notify(response.color, response.msj);
+            }, 'json');
+        });
+
+        setTimeout(() => {
+            $('.alert').slideUp(function () {
+                $(this).remove();
+            });
+        }, 3000)
+    });
+</script>
 {% endblock  %}

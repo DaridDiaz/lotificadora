@@ -7,7 +7,7 @@ from .models import Cliente, Vendedor, Cuenta, Sector, Contrato, Lote
 # Create your views here.
 
 def index(request):
-    return HttpResponse('login en proceso')
+    return render(request, 'index/index.html')
 
 def pago(request):
     if request.is_ajax() and request.method == 'POST':
@@ -144,26 +144,45 @@ def mantenimiento_cliente(request, id):
 def contrato(request):
     cli = Cliente.objects.all()
     ven = Vendedor.objects.all()
-    sec = Sector.objects.all()
     lo = Lote.objects.all()
+    se = Sector.objects.all()
     
     if request.method == 'POST':
         cliente = get_object_or_404(Cliente, pk=request.POST.get('cbo-cliente'))
         vendedor = get_object_or_404(Vendedor, pk=request.POST.get('cbo-vendedor'))
         lote = get_object_or_404(Lote, pk=request.POST.get('cbo-lote'))
         cuotas = request.POST.get('cbo-cuotas')
-        precio = request.POST.get('txt-precio')
+        precio_cuota = request.POST.get('txt-precio')
 
-        Contrato.objects.create(cliente=cliente,vendedor=vendedor,lote=lote,cuotas=int(cuotas),precio_cuota=float(precio))
+        Contrato.objects.create(cliente=cliente,vendedor=vendedor,lote=lote,cuotas=int(cuotas),precio_cuota=float(precio_cuota))
+        
+        messages.add_message(request, messages.INFO, 'El contrato se ha creado de forma exitosa')
     
-
     ctx = {
         'cliente': cli,
         'vendedor': ven,
-        'sector' : sec,
         'lote' : lo,
+        'sector': se,
     }
     return render(request, 'contrato/contrato.html', ctx)
 
+def calcular_cuota(request):
+    periodo= request.POST.get('cbo-cuotas')
+    monto = 1000000
+    tasa = 20
+    
+    tasa = tasa / 100 / 12
+    periodo = periodo * 12
+    cuota = (monto * tasa) / (1 - (1 + tasa) ** -periodo)
+
+    ctx = {
+        'cuota': cuota,
+    }
+    return render(request, 'contrato/contrato',ctx) 
+
 def terreno(request):
+    lote = Lote.objects.all().order_by('nombre')
+    ctx = {
+        'lote': lote
+    }
     return render(request, 'terreno/terreno.html')
