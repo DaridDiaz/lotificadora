@@ -2,101 +2,136 @@
 {% block title %}vendedor{% endblock  %}
 
 {% block container %}
+    <!-- registro empleado -->
     <div class="row">
         <!-- columna formulario -->
         <div class="col-md-4">
-            <form action="" method="POST" id="frm-vendedor">
+            <h3>EMPLEADO</h3>
+            {% if v %}
+            <form action="{% url 'mantenimiento_vendedor' v.id %}" method="post" id="#frm-vendedor">
+            {% else %}
+            <form action="" method="post" id="#frm-vendedor">
+            {% endif %}
+            
                 {% csrf_token %}
                 <!-- identidad -->
                 <div>
                     <label for="txt-dni">N de Identidad</label>
-                    <input type="text" class="form-control" id="txt-dni" name="txt-dni" placeholder="0000-0000-00000">
+                    <input type="text" value="{{ v.dni }}" class="form-control" id="txt-dni" name="txt-dni" placeholder="0000-0000-00000" required autofocus>
                 </div>
                 <!-- nombre y apellido -->
                 <div class="row">
                     <!-- nombre -->
                     <div class="col-md-6">
                         <label for="txt-nombre">Nombre</label>
-                        <input type="text" class="form-control" id="txt-nombre" name="txt-nombre" placeholder="Nombre">
+                        <input type="text" value="{{ v.nombre }}" class="form-control" id="txt-nombre" name="txt-nombre" placeholder="Nombre" required autofocus>
                     </div>
                     <!-- apellido -->
                     <div class="col-md-6">
                         <label for="txt-apellido">Apellido</label>
-                        <input type="text" class="form-control" id="txt-apellido" name="txt-apellido" placeholder="Apellido">
+                        <input type="text" value="{{ v.apellido }}" class="form-control" id="txt-apellido" name="txt-apellido" placeholder="Apellido" required autofocus>
                     </div>
                 </div>
                 <!-- direccion -->
                 <div>
                     <label for="txt-direccion">Direccion</label>
-                    <input type="text" class="form-control" id="txt-direccion" name="txt-direccion" placeholder="1234 Main St">
+                    <input type="text" value="{{ v.direccion }}" class="form-control" id="txt-direccion" name="txt-direccion" placeholder="1234 Main St" required autofocus>
                 </div>
                 <!-- fecha de nacimiento -->
                 <div>
                     <label for="txt-correo">Correo electronico</label>
-                    <input type="email" class="form-control" id="txt-correo" name="txt-correo" placeholder="example@email.com">
+                    <input type="email" value="{{ v.correo }}" class="form-control" id="txt-correo" name="txt-correo" placeholder="example@email.com">
                 </div>
                 <!-- telefono y correo -->
                 <div class="row">
                     <!-- telefono -->
                     <div class="col-md-6">
                         <label for="txt-fecha">Fecha de Nacimiento</label>
-                        <input type="date" class="form-control" id="txt-fecha" name="txt-fecha">
+                        <input type="date" value="{{ v.fecha }}" class="form-control" id="txt-fecha" name="txt-fecha" required autofocus>
                     </div>
                     <!-- telefono -->
                     <div class="col-md-4">
                         <label for="txt-telefono">telefono</label>
-                        <input type="text" class="form-control" id="txt-telefono" name="txt-telefono" placeholder="1234-5678">
-                    </div>
-                    <!-- extra -->
-                    <div class="col-md-2">
-                        <label for="inputState">State</label>
-                        <select id="inputState" class="form-control">
-                            <option selected>Choose...</option>
-                            <option>...</option>
-                        </select>
+                        <input type="text" value="{{ v.telefono }}" class="form-control" id="txt-telefono" name="txt-telefono" placeholder="1234-5678" required autofocus>
                     </div>
                 </div>
-                <!-- boton registro -->
-                <button type="submit" class="mt-5 btn btn-primary">Registro</button>
+                <div class="mt-4">
+                    <!-- boton registro -->
+                    {% if v %}
+                    <input type="submit" class="btn btn-success" value="actualizar Cliente">
+                    {% else %}
+                    <input type="submit" class="btn btn-success" value="Registrar Cliente">
+                    {% endif %}
+                </div>
             </form>
         </div>
         <!-- columna tabla -->
         <div class="col-md-8">
-            <table class=" table">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>dni</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>telefono</th>
-                        <th>correo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for v in vendedor %}
-                        <tr>
-                            <td>{{v.dni}}</td>
-                            <td>{{v.nombre}}</td>
-                            <td>{{v.apellido}}</td>
-                            <td>{{v.telefono}}</td>
-                            <td>{{v.correo}}</td>
+            <!-- mensaje de alerta -->
+            {% if messages %}
+                <div class="alert alert-success mb-2">
+                {% for message in messages %}
+                    {{ message|safe }}
+                {% endfor %}
+                </div>
+            {% endif %}
+
+            <form action="" method="get">
+                <input type="search" name="q" value="{{ q }}" class="form-control" placeholder="Buscar Empleado">
+            </form>
+
+            <h2>Listado de Empleados: {{ vendedor|length }}</h2>
+            <!-- tabla de vendedor -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="text-center">
+                            <th>dni</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>telefono</th>
+                            <th>correo</th>
+                            <th>acciones</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for v in vendedor %}
+                            <tr>
+                                <td>{{v.dni}}</td>
+                                <td>{{v.nombre}}</td>
+                                <td>{{v.apellido}}</td>
+                                <td>{{v.telefono}}</td>
+                                <td>{{v.correo|default_if_none:'-' }}</td>
+                                <td>
+                                    <a href="{% url 'mantenimiento_vendedor' v.id %}" type="submit" class="btn btn-success">editar</a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <div class="alert alert-danger">No se encuentran Empleado</div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 {% endblock  %}
-{% block js %}
-    <script>
-        $(function () {
-            $('#frm-vendedor').on('submit',function(e){
-                e.preventDefault();
 
-                $.post('', $(this).serialize(), function (response){
-                    notify('success', response.msj);
-                }, 'json');
-            });
+{% block js %}
+<script>
+    $(function () {
+        $('#frm-cliente').on('submit', function (e) {
+            e.preventDefault();
+            var me = $(this);
+            $.post('', $(this).serialize(), function (response) {
+                notify(response.color, response.msj);
+            }, 'json');
         });
-    </script>
+
+        setTimeout(() => {
+            $('.alert').slideUp(function () {
+                $(this).remove();
+            });
+        }, 3000)
+    });
+</script>
 {% endblock  %}

@@ -30,8 +30,13 @@ def pago(request):
     return render(request, 'pago/pago.html', {'Cuenta': cuenta})
 
 def vendedor(request):
-
-    if request.is_ajax() and request.method == 'POST':
+    q = request.GET.get('q')
+    if q:
+        ven = Vendedor.objects.filter(nombre__startswith=q).order_by('nombre')
+    else:
+        ven = Vendedor.objects.all().order_by('nombre')
+    #POST
+    if request.method == 'POST':
         dni = request.POST.get('txt-dni')
         nombre = request.POST.get('txt-nombre')
         apellido = request.POST.get('txt-apellido')
@@ -40,16 +45,44 @@ def vendedor(request):
         telefono = request.POST.get('txt-telefono')
         correo = request.POST.get('txt-correo')
 
-        v = Vendedor(dni=dni,nombre=nombre,apellido=apellido,direccion=direccion,fecha=fecha,telefono=telefono,correo=correo)
-        v.save()
+        Vendedor.objects.create(dni=dni,nombre=nombre,apellido=apellido,direccion=direccion,fecha=fecha,telefono=telefono,correo=correo)
+        
+        messages.add_message(request, messages.INFO, f'El Empleado {nombre} {apellido} se ha registrado de forma exitosa')
 
-        messages.add_message(request, messages.INFO, f'el vendedor {nombre} {apellido} se ha registrado de forma exitosa')
-    
-    ven = Vendedor.objects.all()
     ctx = {
         'vendedor': ven,
     }
+    return render(request, 'vendedor/vendedor.html', ctx)
+
+def mantenimiento_vendedor(request, id):
+    v = get_object_or_404(Vendedor, pk=id)
+    ven = Vendedor.objects.all().order_by('nombre')
+    #POST
+    if request.method == 'POST':
+        dni = request.POST.get('txt-dni')
+        nombre = request.POST.get('txt-nombre')
+        apellido = request.POST.get('txt-apellido')
+        direccion = request.POST.get('txt-direccion')
+        fecha = request.POST.get('txt-fecha')
+        telefono = request.POST.get('txt-telefono')
+        correo = request.POST.get('txt-correo')
+
+        v = Vendedor.objects.get(pk=id)
+        v.dni = dni
+        v.nombre = nombre
+        v.apellido = apellido
+        v.direccion = direccion
+        v.fecha = fecha
+        v.telefono = telefono
+        v.correo = correo
+        v.save()
         
+        messages.add_message(request, messages.INFO, f'El Empleado {nombre} {apellido} se ha actualizado de forma exitosa')
+
+    ctx = {
+            'vendedor': ven,
+            'v': v
+        }
     return render(request, 'vendedor/vendedor.html', ctx)
 
 def cliente(request):
@@ -78,10 +111,9 @@ def cliente(request):
     return render(request, 'cliente/cliente.html', ctx)
 
 def mantenimiento_cliente(request, id):
-    
     c = get_object_or_404(Cliente, pk=id)
     cli = Cliente.objects.all().order_by('nombre')
-
+    #POST
     if request.method == 'POST':
         dni = request.POST.get('txt-dni')
         nombre = request.POST.get('txt-nombre')
@@ -101,7 +133,7 @@ def mantenimiento_cliente(request, id):
         c.correo = correo
         c.save()
         
-        messages.add_message(request, messages.INFO, f'el cliente {nombre} {apellido} se ha registrado de forma exitosa')
+        messages.add_message(request, messages.INFO, f'el cliente {nombre} {apellido} se ha actualizado de forma exitosa')
 
     ctx = {
             'cliente': cli,
