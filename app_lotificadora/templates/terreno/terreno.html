@@ -9,34 +9,71 @@
                 <!-- registro de sector -->
                 <div class="col-md-12">
                     <h2>SECTOR</h2>
-                    <div>
-                        <label for="txt-nombre">Nombre Sector</label>
-                        <input type="text" class="form-control" id="txt-nombre" name="txt-nombre">
-                    </div>
-                    <div>
-                        <label for="txt-cantidad">cantidad de lotes</label>
-                        <input type="text" class="form-control" id="txt-cantidad" name="txt-cantidad">
-                    </div>
-                    <div>
-                        <label for="txt-ubicacion">ubicacion del sector</label>
-                        <input type="text" class="form-control" id="txt-ubicacion" name="txt-ubicacion">
-                    </div>
+                    {% if v %}
+                    <form action="{% url 'mantenimiento_vendedor' v.id %}" method="post" id="#frm-terreno">
+                    {% else %}
+                    <form action="" method="post" id="#frm-terreno">
+                    {% endif %}
+                        {% csrf_token %}
+                        <div>
+                            <label for="txt-nombre">Nombre Sector</label>
+                            <input type="text" value="{{ t.nombre }}" class="form-control" id="txt-nombre" name="txt-nombre" required autofocus>
+                        </div>
+                        <div>
+                            <label for="txt-cantidad">cantidad de lotes</label>
+                            <input type="text" value="{{ t.cantidad }}" class="form-control" id="txt-cantidad" name="txt-cantidad" required autofocus>
+                        </div>
+                        <div>
+                            <label for="txt-ubicacion">ubicacion del sector</label>
+                            <input type="text" value="{{ t.ubicacion }}" class="form-control" id="txt-ubicacion" name="txt-ubicacion" required autofocus>
+                        </div>
+                        <div class="mt-2">
+                            <!-- boton registro -->
+                            {% if t %}
+                            <input type="submit" class="btn btn-success" value="actualizar Cliente">
+                            {% else %}
+                            <input type="submit" class="btn btn-success" value="Registrar Sector">
+                            {% endif %}
+                        </div>
+                    </form>
                 </div>
                 <!-- registro de lote -->
                 <div class="col-md-12 mt-4">
                     <h2>LOTE</h2>
-                    <div>
-                        <label for="txt-nombre">Nombre nombre</label>
-                        <input type="text" class="form-control" id="txt-nombre" name="txt-nombre">
-                    </div>
-                    <div>
-                        <label for="cbo-sector">Sector</label>
-                        <input type="text" class="form-control" id="cbo-sector" name="cbo-sector">
-                    </div>
-                    <div>
-                        <label for="txt-ubicacion">ubicacion del sector</label>
-                        <input type="text" class="form-control" id="txt-ubicacion" name="txt-ubicacion">
-                    </div>
+                    {% if t %}
+                    <form action="{% url 'mantenimiento_vendedor' v.id %}" method="post" id="#frm-terreno">
+                    {% else %}
+                    <form action="" method="post" id="#frm-terreno">
+                    {% endif %}
+                        {% csrf_token %}
+                        <div>
+                            <label for="txt-nombre">Nombre</label>
+                            <input type="text" class="form-control" id="txt-nombre" name="txt-nombre">
+                        </div>
+                        <div>
+                            <label for="cbo-sector">Sector</label>
+                            <input type="text" class="form-control" id="cbo-sector" name="cbo-sector">
+                        </div>
+                        <div>
+                            <label for="txt-dimension">Dimension del lote</label>
+                            <input type="text" class="form-control" id="txt-dimension" name="txt-dimension">
+                        </div>
+                        <div>
+                            <label for="txt-precio">precio del lote</label>
+                            <input type="text" class="form-control" id="txt-precio" name="txt-precio">
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="chk-estado" checked>
+                            <label class="form-check-label" for="chk-estado">Estado del lote</label>
+                        </div>
+                        <div class="mt-2">
+                            {% if t %}
+                            <input type="submit" class="btn btn-success" value="actualizar Cliente">
+                            {% else %}
+                            <input type="submit" class="btn btn-success" value="Registrar Lote">
+                            {% endif %}
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -70,20 +107,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for l in lote %}
+                        {% for l in terreno %}
                             <tr class="text-center">
                                 <td>{{ l.sector }}</td>
-                                <td>{{ l.lote }}</td>
+                                <td>{{ l.nombre }}</td>
                                 <td>{{ l.dimension }}</td>
                                 <td>{{ l.precio }}</td>
                                 <td>{{ l.estado }}</td>
                                 <td>
-                                    <a href="{% url 'mantenimiento_cliente' c.id %}" type="submit" class="btn btn-success">editar</a>
-                                    <input type="submit" class="btn btn-success" value="eliminar">
+                                    <a onclick="if (!confirm('Confirme la eliminacion')) return false;" href="{% url 'eliminar_terreno' l.id %}" type="submit" class="btn btn-success" value="eliminar">Elim</a>
                                 </td>
                             </tr>
                         {% empty %}
-                            <div class="alert alert-danger">No se encuentran Clientes</div>
+                            <div class="alert alert-danger">No se encuentran lotes</div>
                         {% endfor %}
                     </tbody>
                 </table>

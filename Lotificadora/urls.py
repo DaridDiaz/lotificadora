@@ -37,6 +37,7 @@ urlpatterns = [
     
     path('contrato/', views.contrato, name="contrato"),
     path('terreno/', views.terreno, name="terreno"),
+    path('terreno/<int:id>/eliminar/', views.eliminar_terreno, name='eliminar_terreno'),
     path('pago/', views.pago, name="pago"),
 
     path('admin/', admin.site.urls),

@@ -45,7 +45,7 @@ class Cuenta(models.Model):
 
 class Sector(models.Model):
     nombre = models.CharField(max_length=35)
-    cantidad = models.FloatField(default=0)
+    cantidad = models.FloatField(default=0, null=True, blank=True)
     ubicacion = models.CharField(max_length=40, null=True)
     def __str__(self):
         return self.nombre
@@ -53,9 +53,9 @@ class Sector(models.Model):
 class Lote(models.Model):
     nombre = models.CharField(max_length=35)
     sector = models.ForeignKey(Sector,on_delete=models.CASCADE, null=True)
-    dimension = models.CharField(max_length=40)
-    precio = models.FloatField(default=0)
-    estado = models.BooleanField()
+    dimension = models.CharField(max_length=40, null=True, blank=True)
+    precio = models.FloatField(default=0, null=True, blank=True)
+    estado = models.BooleanField(null=True, blank=True)
     def __str__(self):
         return f'{self.sector} - {self.nombre}'
 

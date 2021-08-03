@@ -1,6 +1,7 @@
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
+from django.urls import reverse
 from math import pow 
 from .models import Cliente, Vendedor, Cuenta, Sector, Contrato, Lote
 
@@ -181,8 +182,54 @@ def calcular_cuota(request):
     return render(request, 'contrato/contrato',ctx) 
 
 def terreno(request):
-    lote = Lote.objects.all().order_by('nombre')
+    # lote = Lote.objects.all().order_by('nombre')
+    # ctx = {
+    #     'lote': lote
+    # }
+    # return render(request, 'terreno/terreno.html')
+
+    q = request.GET.get('q')
+    if q:
+        sec = Sector.objects.filter(nombre__startswith=q).order_by('nombre')
+        lot = Lote.objects.filter(nombre__startswith=q).order_by('nombre')
+    else:
+        sec = Sector.objects.all().order_by('nombre')
+        lot = Lote.objects.all().order_by('nombre')
+    #POST
+    if request.method == 'POST':
+        nombre = request.POST.get('txt-nombre')
+        cantidad = request.POST.get('txt-cantidad')
+        ubicacion = request.POST.get('txt-ubicacion')
+
+        Sector.objects.create(nombre=nombre,cantidad=cantidad,ubicacion=ubicacion)
+        
+        messages.add_message(request, messages.INFO, f'El Sector {nombre} se ha registrado de forma exitosa')
+
+    if request.method == 'POST':
+        nombre = request.POST.get('txt-nombre')
+        sector = request.POST.get('txt-sector')
+        dimension = request.POST.get('txt-dimension')
+        precio = request.POST.get('txt-precio')
+        estado = request.POST.get('chk-estado')
+
+        Lote.objects.create(nombre=nombre,sector=sector,dimension=dimension,precio=precio,estado=estado)
+        
+        messages.add_message(request, messages.INFO, f'El Lote {nombre}, sector {sector} se ha registrado de forma exitosa')
+
     ctx = {
-        'lote': lote
+
+        'terreno': sec,
+        'terreno': lot,
     }
-    return render(request, 'terreno/terreno.html')
+
+    return render(request, 'terreno/terreno.html', ctx)
+
+def eliminar_terreno(request, id):
+    Lote.objects.get(pk=1).delete()
+    return redirect(reverse('terreno'))
+    # try:
+    #     lo = Lote.objects.get(pk=1).delete()(writer=request.user)
+    #     if lo:
+    #         return render(request, 'terreno/terreno.html', {'lo': lo})   
+    # except ObjectDoesNotExist:
+    #     return render(request, 'terreno/terreno.html'')
