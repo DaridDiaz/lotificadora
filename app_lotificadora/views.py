@@ -6,8 +6,8 @@ from .models import Cliente, Vendedor, Cuenta, Sector, Contrato, Lote
 
 # Create your views here.
 
-def index(request):
-    return render(request, 'index/index.html')
+def inicio(request):
+    return render(request, 'inicio/inicio.html')
 
 def pago(request):
     if request.is_ajax() and request.method == 'POST':
