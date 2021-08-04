@@ -34,15 +34,6 @@ class Vendedor(models.Model):
     def __str__(self):
         return f'{self.nombre} {self.apellido}'
 
-class Cuenta(models.Model):
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-    saldo_pagar = models.FloatField(default=0)
-    estado = models.BooleanField(default=True)
-    cliente = models.ForeignKey(Cliente,on_delete=models.CASCADE, null=True)
-
-    def __str__(self):
-        return f'{self.id} {self.cliente} - {self.saldo_pagar}'
-
 class Sector(models.Model):
     nombre = models.CharField(max_length=35)
     cantidad = models.FloatField(default=0, null=True, blank=True)
@@ -59,6 +50,28 @@ class Lote(models.Model):
     def __str__(self):
         return f'{self.sector} - {self.nombre}'
 
+class Cuenta(models.Model):
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    saldo_pagar = models.FloatField(default=0)
+    estado = models.BooleanField(default=True)
+    cliente = models.ForeignKey(Cliente,on_delete=models.CASCADE, null=True)
+    lote = models.ForeignKey(Lote,on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return f'{self.id} {self.cliente} - {self.saldo_pagar}'
+
+class Contrato(models.Model):
+
+    cliente = models.ForeignKey(Cliente,on_delete=models.CASCADE, null=True)
+    vendedor = models.ForeignKey(Vendedor,on_delete=models.CASCADE, null=True)
+    lote = models.ForeignKey(Lote,on_delete=models.CASCADE, null=True)
+    cuotas = models.IntegerField(default=0)
+    precio_cuota = models.FloatField(default=0)
+    cuenta = models.ForeignKey(Cuenta,on_delete=models.CASCADE, null=True)
+    
+    def __str__(self):
+        return f'{self.id} {self.cliente} - Cuotas: {self.cuotas}'
+
 class Pago(models.Model):
     MOVIMIENTOS = (
         ('1', 'Pago cuota'),
@@ -69,13 +82,4 @@ class Pago(models.Model):
     origen = models.ForeignKey(Cuenta, on_delete=models.CASCADE)
     monto = models.FloatField(null=True, blank=True)
 
-class Contrato(models.Model):
 
-    cliente = models.ForeignKey(Cliente,on_delete=models.CASCADE, null=True)
-    vendedor = models.ForeignKey(Vendedor,on_delete=models.CASCADE, null=True)
-    lote = models.ForeignKey(Lote,on_delete=models.CASCADE, null=True)
-    cuotas = models.IntegerField(default=0)
-    precio_cuota = models.FloatField(default=0)
-    
-    def __str__(self):
-        return f'{self.id} {self.cliente} - Cuotas: {self.cuotas}'

@@ -11,24 +11,32 @@ def inicio(request):
     return render(request, 'inicio/inicio.html')
 
 def pago(request):
+    c = Cuenta.objects.all()
     if request.is_ajax() and request.method == 'POST':
         accion = request.POST.get('cbo-pago')
 
         if accion == '1': #pago a cuota
             cuenta_id = request.POST.get('cbo-cuenta')
-            monto = request.POST.get('txt-monto')
-
             cuenta = Cuenta.objects.get(pk=cuenta_id)
+            #cuentas = get_object_or_404(Contrato, pk=request.POST.get('cbo-cuenta'))
 
-            cuenta.saldo_pagar -= float(monto)
+            cuotas = 80000
+            saldo = 800000
+            interes = float(saldo)*(0.1)
+            capital = float(cuotas) - float(interes)
+
+            cuenta.saldo_pagar -= float(capital)
             cuenta.save()
 
             return JsonResponse({'msj': 'El deposito a sido realizado'})
         elif accion == '2': #pago a capital
+            return JsonResponse({'msj': 'El deposito a sido realizado'})
             pass
 
-    cuenta = Cuenta.objects.all()
-    return render(request, 'pago/pago.html', {'Cuenta': cuenta})
+    ctx = {
+        'Cuenta': c,
+    }
+    return render(request, 'pago/pago.html', ctx)
 
 def vendedor(request):
     q = request.GET.get('q')
@@ -148,15 +156,29 @@ def contrato(request):
     lo = Lote.objects.all()
     se = Sector.objects.all()
     
+    
+
     if request.method == 'POST':
         cliente = get_object_or_404(Cliente, pk=request.POST.get('cbo-cliente'))
         vendedor = get_object_or_404(Vendedor, pk=request.POST.get('cbo-vendedor'))
         lote = get_object_or_404(Lote, pk=request.POST.get('cbo-lote'))
         cuotas = request.POST.get('cbo-cuotas')
-        precio_cuota = request.POST.get('txt-precio')
+        prima = request.POST.get('txt-prima')
+
+        lote.precio -= float(prima)
+        lote.save()
+
+        Cuenta.objects.create(saldo_pagar=lote.precio,cliente=cliente)
+
+        cuotas = cuotas
+        tasa = 10/100
+        monto = lote.precio
+        precio_cuota = (float(monto))/((1-(1+tasa)** -float(cuotas))/tasa)
 
         Contrato.objects.create(cliente=cliente,vendedor=vendedor,lote=lote,cuotas=int(cuotas),precio_cuota=float(precio_cuota))
         
+        lote.estado=(False)
+        lote.save()
         messages.add_message(request, messages.INFO, 'El contrato se ha creado de forma exitosa')
     
     ctx = {
@@ -166,20 +188,6 @@ def contrato(request):
         'sector': se,
     }
     return render(request, 'contrato/contrato.html', ctx)
-
-def calcular_cuota(request):
-    periodo= request.POST.get('cbo-cuotas')
-    monto = 1000000
-    tasa = 20
-    
-    tasa = tasa / 100 / 12
-    periodo = periodo * 12
-    cuota = (monto * tasa) / (1 - (1 + tasa) ** -periodo)
-
-    ctx = {
-        'cuota': cuota,
-    }
-    return render(request, 'contrato/contrato',ctx) 
 
 def terreno(request):
     # lote = Lote.objects.all().order_by('nombre')
@@ -205,16 +213,6 @@ def terreno(request):
         
         messages.add_message(request, messages.INFO, f'El Sector {nombre} se ha registrado de forma exitosa')
 
-    if request.method == 'POST':
-        nombre = request.POST.get('txt-nombre')
-        sector = request.POST.get('txt-sector')
-        dimension = request.POST.get('txt-dimension')
-        precio = request.POST.get('txt-precio')
-        estado = request.POST.get('chk-estado')
-
-        Lote.objects.create(nombre=nombre,sector=sector,dimension=dimension,precio=precio,estado=estado)
-        
-        messages.add_message(request, messages.INFO, f'El Lote {nombre}, sector {sector} se ha registrado de forma exitosa')
 
     ctx = {
 
@@ -223,6 +221,18 @@ def terreno(request):
     }
 
     return render(request, 'terreno/terreno.html', ctx)
+
+def lote(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('txt-nombre')
+        sector = request.POST.get('cbo-sector')
+        dimension = request.POST.get('txt-dimension')
+        precio = request.POST.get('txt-precio')
+        estado = request.POST.get('chk-estado')
+
+        Lote.objects.create(nombre=nombre,sector=sector,dimension=dimension,precio=precio,estado=estado)
+        
+        messages.add_message(request, messages.INFO, f'El Lote {nombre}, sector {sector} se ha registrado de forma exitosa')
 
 def eliminar_terreno(request, id):
     Lote.objects.get(pk=1).delete()

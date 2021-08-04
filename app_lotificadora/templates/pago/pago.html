@@ -12,7 +12,6 @@
             <div>
                 <label for="cbo-pago">Tipo de Pago</label>
                 <select name="cbo-pago" id="cbo-pago" class=form-select>
-                    <option value="">Seleccione Tipo</option>
                     <option value="1">pago a cuota</option>
                     <option value="2"> pago a capital</option>
                 </select>
@@ -22,24 +21,24 @@
                 <label for="cbo-cuenta">Cuenta</label>
                 <select name="cbo-cuenta" id="cbo-cuenta" class="form-select">
                     {% for c in Cuenta %}
-                        <option value="{{c.id}}">cuenta #{{ c.id }} - {{ c.cliente }}</option>
+                        <option value="{{c.id}}">cuenta #{{ c.id }} - {{ c.cliente }} - Lote: {{c.lote}}</option>
                     {% endfor %}
                 </select>
             </div>
-            <!-- monto a pagar -->
+
             <div>
-                <label for="txt-monto">Monto</label>
-                <input id="txt-monto" name="txt-monto" type="number" class="form-control">
+                <label for="txt-cuota">cuota</label>
+                <input name="txt-cuota" type="text" class="form-control" id="txt-cuota" placeholder="$$$$" required autofocus>
             </div>
             <!-- boton de pagar -->
             <div>
-                <button type="submit" class="btn btn-primary">Pago a Cuota</button>
+                <button type="submit" class="btn btn-primary">Pago</button>
             </div>
         </form>
     </div>
     <!-- pago a capital -->
     <div class="col-md-6">
-        <h3>Pago a capital</h3>
+        <h3>tabla de contratos</h3>
     </div>
 </div>
 {% endblock  %}
