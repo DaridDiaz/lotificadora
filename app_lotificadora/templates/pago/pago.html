@@ -4,7 +4,7 @@
 {% block container %}
 <div class="row">
     <!-- pago de cuota -->
-    <div class="col-md-6">
+    <div class="col-md-3">
         <h3>Pago de Cuota</h3>
         <form action="" method="post" id="frm-pago">
             {% csrf_token %}
@@ -37,8 +37,36 @@
         </form>
     </div>
     <!-- pago a capital -->
-    <div class="col-md-6">
+    <div class="col-md-9">
         <h3>tabla de contratos</h3>
+            <!-- tabla de vendedor -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="text-center">
+                            <th>cliente</th>
+                            <th>vendedor</th>
+                            <th>lote</th>
+                            <th>cuotas</th>
+                            <th>correo</th>
+                            <th>acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in contrato %}
+                            <tr>
+                                <td>{{c.cliente}}</td>
+                                <td>{{c.vendedor}}</td>
+                                <td>{{c.lote}}</td>
+                                <td>{{c.cuotas}}</td>
+                                <td>{{c.precio_cuota }}</td>
+                            </tr>
+                        {% empty %}
+                            <div class="alert alert-danger">No se encuentran contratos</div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
     </div>
 </div>
 {% endblock  %}

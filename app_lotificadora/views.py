@@ -12,6 +12,7 @@ def inicio(request):
 
 def pago(request):
     c = Cuenta.objects.all()
+    co = Contrato.objects.all()
     if request.is_ajax() and request.method == 'POST':
         accion = request.POST.get('cbo-pago')
 
@@ -20,8 +21,8 @@ def pago(request):
             cuenta = Cuenta.objects.get(pk=cuenta_id)
             #cuentas = get_object_or_404(Contrato, pk=request.POST.get('cbo-cuenta'))
 
-            cuotas = 80000
-            saldo = 800000
+            cuotas = request.POST.get('txt-cuota')
+            saldo = cuenta.saldo_pagar
             interes = float(saldo)*(0.1)
             capital = float(cuotas) - float(interes)
 
@@ -35,6 +36,7 @@ def pago(request):
 
     ctx = {
         'Cuenta': c,
+        'contrato': co,
     }
     return render(request, 'pago/pago.html', ctx)
 
